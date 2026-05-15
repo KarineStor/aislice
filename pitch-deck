@@ -1,0 +1,415 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --navy-900:#070452;
+  --navy-800:#0C0968;
+  --cyan-500:#00C8FF;
+  --cyan-400:#3FD6FF;
+  --coral:#FF4A6E;
+  --sun:#FFC83D;
+  --ink-500:#6B69A8;
+  --font:'DM Sans',-apple-system,sans-serif;
+}
+
+.tol{
+  font-family:var(--font);
+  background:var(--navy-900);
+  color:#fff;
+  border-radius:16px;
+  overflow:hidden;
+  min-height:520px;
+  font-size:115.5%;
+}
+
+.tol-nav{
+  display:flex;align-items:center;
+  background:var(--navy-800);
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  padding:0 20px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.tol-nav::-webkit-scrollbar{display:none;}
+
+.wordmark{
+  font-family:var(--font);font-weight:800;font-size:17.3px;
+  color:#fff;letter-spacing:-.02em;margin-right:16px;white-space:nowrap;flex-shrink:0;
+}
+.wordmark span{color:var(--cyan-500);}
+
+.tol-nav-btn{
+  font-family:var(--font);font-size:13.9px;font-weight:500;
+  color:rgba(255,255,255,0.45);
+  background:transparent;border:none;
+  padding:14px 14px;cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all .18s;white-space:nowrap;flex-shrink:0;
+}
+.tol-nav-btn:hover{color:rgba(255,255,255,0.75);}
+.tol-nav-btn.on{color:var(--cyan-500);border-bottom-color:var(--cyan-500);}
+
+.slide{display:none;padding:28px 24px 32px;animation:fi .25s ease;}
+.slide.on{display:block;}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+.eyebrow{font-size:12.7px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan-500);margin-bottom:6px;}
+.h1{font-size:32.3px;font-weight:800;color:#fff;letter-spacing:-.02em;line-height:1.15;margin-bottom:6px;}
+.sub{font-size:16.2px;color:rgba(255,255,255,0.5);line-height:1.6;margin-bottom:22px;}
+.sub em{color:var(--cyan-400);font-style:normal;}
+
+.quote{
+  border-left:2px solid var(--cyan-500);
+  padding:12px 16px;margin:20px 0;
+  font-size:15px;color:rgba(255,255,255,0.6);
+  line-height:1.7;font-style:italic;
+  background:rgba(0,200,255,0.04);
+  border-radius:0 8px 8px 0;
+}
+.quote strong{color:var(--cyan-400);font-style:normal;}
+
+.pill-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.pill{
+  font-size:12.7px;font-weight:500;
+  padding:4px 12px;border-radius:20px;
+  background:rgba(0,200,255,0.12);
+  color:var(--cyan-400);
+  border:0.5px solid rgba(0,200,255,0.25);
+}
+
+.tx-grid{
+  display:grid;grid-template-columns:1fr 36px 1fr;
+  align-items:stretch;gap:0;margin-bottom:20px;
+}
+.tx-col{border-radius:10px;padding:14px 16px;border:0.5px solid rgba(255,255,255,0.08);}
+.tx-col.old{background:rgba(255,255,255,0.04);}
+.tx-col.new{background:rgba(0,200,255,0.07);border-color:rgba(0,200,255,0.2);}
+.tx-col h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:600;margin-bottom:10px;}
+.tx-col.old h4{color:var(--ink-500);}
+.tx-col.new h4{color:var(--cyan-500);}
+.tx-col ul{list-style:none;}
+.tx-col ul li{font-size:13.9px;padding:4px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.45);}
+.tx-col.new ul li{color:rgba(255,255,255,0.75);}
+.tx-col ul li:last-child{border:none;}
+.arr-mid{display:flex;align-items:center;justify-content:center;color:var(--cyan-500);font-size:18px;}
+
+.stack{display:flex;flex-direction:column;gap:3px;margin-top:4px;}
+.sl{
+  display:flex;align-items:center;gap:10px;
+  border:0.5px solid rgba(255,255,255,0.08);
+  border-radius:8px;padding:11px 14px;cursor:pointer;transition:all .15s;
+}
+.sl:hover{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.15);}
+.sl.open{background:rgba(0,200,255,0.09);border-color:rgba(0,200,255,0.35);}
+.sl-n{font-size:11.5px;font-weight:700;color:var(--ink-500);min-width:16px;}
+.sl-n2{font-size:15px;font-weight:600;color:#fff;flex:1;}
+.sl-r{font-size:12.7px;color:rgba(255,255,255,0.35);text-align:right;max-width:180px;}
+.sl.open .sl-n2{color:var(--cyan-400);}
+.sl.open .sl-r{color:var(--cyan-500);}
+
+.ld{display:none;background:rgba(0,200,255,0.06);border:0.5px solid rgba(0,200,255,0.2);border-radius:8px;padding:13px 15px;margin:2px 0 4px;}
+.ld.open{display:block;animation:fi .2s ease;}
+.ld p{font-size:13.9px;color:rgba(255,255,255,0.55);line-height:1.7;}
+
+.eco-center{
+  border:1.5px solid var(--cyan-500);border-radius:12px;padding:14px 18px;
+  background:rgba(0,200,255,0.07);text-align:center;margin-bottom:10px;
+}
+.eco-center h3{font-size:16.2px;font-weight:700;color:var(--cyan-400);margin-bottom:10px;}
+.eco-center ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+.eco-center ul li{font-size:12.7px;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.07);color:var(--cyan-400);border:0.5px solid rgba(0,200,255,0.25);}
+
+.eco-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;}
+.eco-card{border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:12px 14px;background:rgba(255,255,255,0.03);}
+.eco-card h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--ink-500);margin-bottom:8px;}
+.eco-card ul{list-style:none;}
+.eco-card ul li{font-size:12.7px;color:rgba(255,255,255,0.45);padding:2px 0;}
+
+.engines{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 16px;}
+.eng{
+  border:0.5px solid rgba(255,255,255,0.08);border-radius:10px;padding:14px;
+  cursor:pointer;transition:all .18s;background:rgba(255,255,255,0.03);
+}
+.eng:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15);}
+.eng.open{background:rgba(0,200,255,0.07);border-color:rgba(0,200,255,0.3);}
+.eng-n{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-500);margin-bottom:4px;}
+.eng-t{font-size:16.2px;font-weight:700;color:#fff;margin-bottom:3px;}
+.eng-m{font-size:12.7px;color:rgba(255,255,255,0.35);}
+.ed{display:none;margin-top:10px;border-top:0.5px solid rgba(255,255,255,0.08);padding-top:10px;}
+.ed.open{display:block;}
+.ed li{font-size:12.7px;color:rgba(255,255,255,0.5);padding:2px 0;list-style:none;}
+.ed li::before{content:'— ';color:var(--ink-500);}
+
+.pkg-table{width:100%;border-collapse:collapse;}
+.pkg-table th{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:600;color:var(--ink-500);text-align:left;padding:8px 12px;border-bottom:0.5px solid rgba(255,255,255,0.08);}
+.pkg-table td{padding:10px 12px;border-bottom:0.5px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:13.9px;}
+.pkg-table td:first-child{font-weight:600;color:#fff;}
+.pkg-table tr:last-child td{border:none;}
+
+.timeline{display:flex;flex-direction:column;}
+.phase{display:grid;grid-template-columns:110px 1fr;gap:14px;padding:16px 0;border-bottom:0.5px solid rgba(255,255,255,0.07);}
+.phase:last-child{border:none;}
+.ph-lbl{text-align:right;}
+.ph-tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:20px;text-transform:uppercase;}
+.ph-tag.p1{background:rgba(0,200,255,0.15);color:var(--cyan-400);border:0.5px solid rgba(0,200,255,0.3);}
+.ph-tag.p2{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);border:0.5px solid rgba(255,255,255,0.1);}
+.ph-tag.p3{background:rgba(255,200,61,0.1);color:var(--sun);border:0.5px solid rgba(255,200,61,0.2);}
+.ph-time{font-size:11.5px;color:var(--ink-500);margin-top:5px;}
+.ph-name{font-size:16.2px;font-weight:700;color:#fff;margin-bottom:4px;}
+.ph-focus{font-size:13.9px;color:rgba(255,255,255,0.45);line-height:1.6;margin-bottom:8px;}
+.kpi-row{display:flex;gap:6px;flex-wrap:wrap;}
+.kpi{font-size:11.5px;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);}
+
+.impact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;margin-top:16px;}
+.ic{border:0.5px solid rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;}
+.ic .area{font-size:11.5px;color:var(--ink-500);margin-bottom:4px;}
+.ic .val{font-size:13.9px;font-weight:600;color:var(--cyan-400);}
+
+/* ── Mobile ──────────────────────────────────────────────────── */
+@media(max-width:540px){
+  .tol{font-size:108%;border-radius:12px;}
+
+  .tol-nav{padding:0 12px;}
+  .wordmark{font-size:15px;margin-right:10px;}
+  .tol-nav-btn{font-size:12px;padding:12px 10px;}
+
+  .slide{padding:20px 16px 28px;}
+
+  .eyebrow{font-size:11px;}
+  .h1{font-size:24px;}
+  .sub{font-size:14px;margin-bottom:16px;}
+  .quote{font-size:13px;padding:10px 13px;}
+  .pill{font-size:11px;padding:3px 10px;}
+
+  .tx-grid{grid-template-columns:1fr;gap:8px;}
+  .arr-mid{transform:rotate(90deg);font-size:22px;padding:4px 0;}
+
+  .sl-r{display:none;}
+  .sl-n2{font-size:13px;}
+  .ld p{font-size:13px;}
+
+  .eco-center h3{font-size:14px;}
+  .eco-center ul li{font-size:11px;}
+  .eco-grid{grid-template-columns:1fr 1fr;}
+  .eco-card h4{font-size:10px;}
+  .eco-card ul li{font-size:12px;}
+
+  .engines{grid-template-columns:1fr;}
+  .eng-t{font-size:15px;}
+  .eng-m{font-size:12px;}
+  .ed li{font-size:12px;}
+
+  .pkg-table th{font-size:10px;padding:7px 10px;}
+  .pkg-table td{font-size:12.5px;padding:8px 10px;}
+
+  .phase{grid-template-columns:1fr;gap:6px;}
+  .ph-lbl{text-align:left;display:flex;align-items:center;gap:10px;}
+  .ph-time{margin-top:0;}
+  .ph-name{font-size:15px;}
+  .ph-focus{font-size:13px;}
+  .kpi{font-size:10.5px;}
+
+  .impact-grid{grid-template-columns:1fr 1fr;}
+  .ic .area{font-size:10.5px;}
+  .ic .val{font-size:13px;}
+}
+</style>
+
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">AI Slice pitch deck in Telenor Open Lab design, responsive for mobile</h2>
+
+<div class="tol">
+  <div class="tol-nav">
+    <div class="wordmark">AI<span>Slice</span></div>
+    <button class="tol-nav-btn on" onclick="show(0)">01 Position</button>
+    <button class="tol-nav-btn" onclick="show(1)">02 Stack</button>
+    <button class="tol-nav-btn" onclick="show(2)">03 Marketplace</button>
+    <button class="tol-nav-btn" onclick="show(3)">04 Revenue</button>
+    <button class="tol-nav-btn" onclick="show(4)">05 Rollout</button>
+  </div>
+
+  <div class="slide on" id="s0">
+    <p class="eyebrow">Slide 01 — Strategic position</p>
+    <h1 class="h1">AI Slice</h1>
+    <p class="sub">From connectivity provider to <em>Operational AI Orchestrator</em></p>
+    <div class="pill-row">
+      <span class="pill">Physical AI</span>
+      <span class="pill">Distributed</span>
+      <span class="pill">Real-time</span>
+      <span class="pill">Mission-critical</span>
+    </div>
+    <div class="tx-grid">
+      <div class="tx-col old">
+        <h4>Old Telco</h4>
+        <ul>
+          <li>Connectivity</li>
+          <li>Private 5G</li>
+          <li>Infrastructure delivery</li>
+          <li>SIM &amp; bandwidth</li>
+          <li>Centralized cloud</li>
+        </ul>
+      </div>
+      <div class="arr-mid">→</div>
+      <div class="tx-col new">
+        <h4>AI Slice</h4>
+        <ul>
+          <li>AI runtime orchestration</li>
+          <li>Operational AI marketplace</li>
+          <li>Federated edge/cloud platform</li>
+          <li>SLA &amp; sovereignty layer</li>
+          <li>Edge-cloud continuum</li>
+        </ul>
+      </div>
+    </div>
+    <div class="quote">"AI Slice orchestrates AI workloads securely across customer edge, telco edge, AI Factory and cloud — with <strong>telecom-grade SLA, sovereignty and operational resilience</strong>."</div>
+  </div>
+
+  <div class="slide" id="s1">
+    <p class="eyebrow">Slide 02 — Architecture</p>
+    <h1 class="h1">The federated stack</h1>
+    <p class="sub">Click any layer to explore. Telenor <em>orchestrates</em> — not all compute.</p>
+    <div class="stack">
+      <div class="sl" id="sl0" onclick="toggleLayer(0)"><span class="sl-n">7</span><span class="sl-n2">Marketplace &amp; AI ecosystem</span><span class="sl-r">Revenue &amp; partner scale</span></div>
+      <div class="ld" id="ld0"><p>Partners publish AI models, industrial apps, edge runtimes, robotics integrations, vision AI, OT connectors and workflows. Telenor earns commission and owns runtime governance above it all.</p></div>
+      <div class="sl" id="sl1" onclick="toggleLayer(1)"><span class="sl-n">6</span><span class="sl-n2">Industry AI workflows</span><span class="sl-r">Vertical solutions</span></div>
+      <div class="ld" id="ld1"><p>Pre-packaged vertical workloads for energy, maritime, manufacturing and public sector — digital twins, predictive maintenance, vision AI and OT analytics — delivered as managed services.</p></div>
+      <div class="sl" id="sl2" onclick="toggleLayer(2)"><span class="sl-n">5</span><span class="sl-n2">AI Slice orchestration platform</span><span class="sl-r">Core control plane</span></div>
+      <div class="ld" id="ld2"><p>Workload placement, telemetry, policy control, runtime governance and SLA enforcement. Telenor's core differentiator — the plane that makes the entire ecosystem coherent. Monetized as SaaS licensing and per-workload fees.</p></div>
+      <div class="sl" id="sl3" onclick="toggleLayer(3)"><span class="sl-n">4</span><span class="sl-n2">Federated compute continuum</span><span class="sl-r">Customer · Telco · Cloud</span></div>
+      <div class="ld" id="ld3"><p>GPU consumption, edge runtime and AI Factory workloads run across customer-owned hardware, Telenor edge nodes and hyperscaler cloud. Telenor orchestrates — not necessarily owns. Monetized as GPU-hours and reserved capacity.</p></div>
+      <div class="sl" id="sl4" onclick="toggleLayer(4)"><span class="sl-n">3</span><span class="sl-n2">Security &amp; sovereignty</span><span class="sl-r">Trust fabric</span></div>
+      <div class="ld" id="ld4"><p>Data residency, policy enforcement and sovereign AI operations. Critical for public sector and regulated industries. Enables the Sovereign AI subscription tier.</p></div>
+      <div class="sl" id="sl5" onclick="toggleLayer(5)"><span class="sl-n">2</span><span class="sl-n2">Intelligent connectivity fabric</span><span class="sl-r">5G · QoS · Transport</span></div>
+      <div class="ld" id="ld5"><p>5G slices, QoS guarantees, redundant transport and low-latency operational networking. The connectivity layer becomes programmable — tied to SLA tiers and operational zones.</p></div>
+      <div class="sl" id="sl6" onclick="toggleLayer(6)"><span class="sl-n">1</span><span class="sl-n2">Physical infrastructure</span><span class="sl-r">Foundation</span></div>
+      <div class="ld" id="ld6"><p>The radio network, data centers and edge nodes that anchor everything above. Necessary but no longer sufficient for competitive differentiation or margin growth.</p></div>
+    </div>
+  </div>
+
+  <div class="slide" id="s2">
+    <p class="eyebrow">Slide 03 — Ecosystem</p>
+    <h1 class="h1">Marketplace ecosystem</h1>
+    <p class="sub">Telenor owns the <em>orchestration plane</em>. Partners own the applications.</p>
+    <div class="eco-center">
+      <h3>Telenor's strategic role</h3>
+      <ul>
+        <li>Orchestration plane</li><li>Runtime governance</li>
+        <li>Workload placement</li><li>SLA assurance</li>
+        <li>Operational telemetry</li><li>Trust &amp; sovereignty</li>
+      </ul>
+    </div>
+    <div class="eco-grid">
+      <div class="eco-card"><h4>Customers</h4><ul><li>Edge devices</li><li>OT systems</li><li>Data sources</li></ul></div>
+      <div class="eco-card"><h4>Infrastructure</h4><ul><li>NVIDIA</li><li>Cisco</li><li>Palo Alto</li></ul></div>
+      <div class="eco-card"><h4>Industrial &amp; OT</h4><ul><li>Maritime</li><li>Energy</li><li>Robotics</li><li>Automation</li></ul></div>
+      <div class="eco-card"><h4>AI / ISVs</h4><ul><li>Vision AI</li><li>Digital twins</li><li>Pred. maintenance</li><li>OT analytics</li></ul></div>
+      <div class="eco-card"><h4>Hyperscalers</h4><ul><li>Elastic compute</li><li>AI services</li><li>Cloud integration</li></ul></div>
+    </div>
+  </div>
+
+  <div class="slide" id="s3">
+    <p class="eyebrow">Slide 04 — Monetization</p>
+    <h1 class="h1">Four revenue engines</h1>
+    <p class="sub">Monetizing <em>operational AI delivery</em> — not just connectivity. Tap each engine.</p>
+    <div class="engines">
+      <div class="eng" onclick="toggleEng(0)">
+        <div class="eng-n">Engine 01</div>
+        <div class="eng-t">Connectivity &amp; SLA</div>
+        <div class="eng-m">Subscription · SLA tiers · Zones</div>
+        <ul class="ed" id="ed0"><li>5G slices &amp; QoS</li><li>Redundant transport</li><li>Low-latency networking</li><li>Tiered operational zones</li></ul>
+      </div>
+      <div class="eng" onclick="toggleEng(1)">
+        <div class="eng-n">Engine 02</div>
+        <div class="eng-t">Compute &amp; AI runtime</div>
+        <div class="eng-m">GPU-hours · Reserved capacity</div>
+        <ul class="ed" id="ed1"><li>GPU consumption billing</li><li>Edge runtime hosting</li><li>AI Factory workloads</li><li>Federated inference</li></ul>
+      </div>
+      <div class="eng" onclick="toggleEng(2)">
+        <div class="eng-n">Engine 03</div>
+        <div class="eng-t">Orchestration platform</div>
+        <div class="eng-m">SaaS licensing · Per workload/site</div>
+        <ul class="ed" id="ed2"><li>Workload placement &amp; telemetry</li><li>Policy &amp; runtime governance</li><li>SLA enforcement</li><li>Orchestration fee per site</li></ul>
+      </div>
+      <div class="eng" onclick="toggleEng(3)">
+        <div class="eng-n">Engine 04</div>
+        <div class="eng-t">Marketplace &amp; industry</div>
+        <div class="eng-m">Revenue share · Commission</div>
+        <ul class="ed" id="ed3"><li>AI application marketplace</li><li>Workflow bundles</li><li>Vertical managed services</li><li>Partner revenue share</li></ul>
+      </div>
+    </div>
+    <table class="pkg-table">
+      <thead><tr><th>Package</th><th>Target segment</th></tr></thead>
+      <tbody>
+        <tr><td>AI Slice Foundation</td><td>Enterprise edge AI</td></tr>
+        <tr><td>AI Slice Critical Ops</td><td>Energy / industrial</td></tr>
+        <tr><td>AI Slice Sovereign AI</td><td>Public sector / defense</td></tr>
+        <tr><td>AI Slice Physical AI</td><td>Robotics / autonomy</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="slide" id="s4">
+    <p class="eyebrow">Slide 05 — Rollout</p>
+    <h1 class="h1">Rollout strategy &amp; impact</h1>
+    <p class="sub">Three phases from <em>foundation</em> to <em>platform leadership</em>.</p>
+    <div class="timeline">
+      <div class="phase">
+        <div class="ph-lbl"><span class="ph-tag p1">Phase 1</span><div class="ph-time">0–12 months</div></div>
+        <div>
+          <div class="ph-name">Foundation</div>
+          <div class="ph-focus">Lighthouse customers in energy &amp; maritime. AI Factory integration. Edge orchestration MVP and platform validation.</div>
+          <div class="kpi-row"><span class="kpi">First deployments</span><span class="kpi">Platform validation</span><span class="kpi">Partner onboarding</span></div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="ph-lbl"><span class="ph-tag p2">Phase 2</span><div class="ph-time">12–24 months</div></div>
+        <div>
+          <div class="ph-name">Scale</div>
+          <div class="ph-focus">Marketplace onboarding, federated compute, multi-partner ecosystem, sovereign AI services. Recurring platform revenue begins to compound.</div>
+          <div class="kpi-row"><span class="kpi">Recurring revenue</span><span class="kpi">Compute growth</span><span class="kpi">Ecosystem expansion</span></div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="ph-lbl"><span class="ph-tag p3">Phase 3</span><div class="ph-time">24–48 months</div></div>
+        <div>
+          <div class="ph-name">Platform leadership</div>
+          <div class="ph-focus">Cross-industry AI operations, workload federation, autonomous operational environments. High-margin orchestration at scale.</div>
+          <div class="kpi-row"><span class="kpi">Marketplace share</span><span class="kpi">High-margin orchestration</span><span class="kpi">Customer lock-in</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="impact-grid">
+      <div class="ic"><div class="area">Connectivity ARPU</div><div class="val">Increased</div></div>
+      <div class="ic"><div class="area">Edge / AI revenue</div><div class="val">New engine</div></div>
+      <div class="ic"><div class="area">Customer stickiness</div><div class="val">Much higher</div></div>
+      <div class="ic"><div class="area">Strategic relevance</div><div class="val">Core ops</div></div>
+      <div class="ic"><div class="area">Margin profile</div><div class="val">SaaS mix</div></div>
+      <div class="ic"><div class="area">Ecosystem leverage</div><div class="val">Exponential</div></div>
+    </div>
+    <div class="quote" style="margin-top:20px;">"AI Slice transforms Telenor from a connectivity provider into the <strong>trusted orchestration layer for Operational AI</strong> — enabling a federated ecosystem of edge, AI, cloud and industrial operations."</div>
+  </div>
+</div>
+
+<script>
+function show(i){
+  document.querySelectorAll('.slide').forEach((s,j)=>s.classList.toggle('on',j===i));
+  document.querySelectorAll('.tol-nav-btn').forEach((b,j)=>b.classList.toggle('on',j===i));
+}
+function toggleLayer(i){
+  const ld=document.getElementById('ld'+i),sl=document.getElementById('sl'+i);
+  const isOpen=ld.classList.contains('open');
+  document.querySelectorAll('.ld').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.sl').forEach(s=>s.classList.remove('open'));
+  if(!isOpen){ld.classList.add('open');sl.classList.add('open');}
+}
+function toggleEng(i){
+  const ed=document.getElementById('ed'+i),eng=ed.closest('.eng');
+  const isOpen=ed.classList.contains('open');
+  document.querySelectorAll('.ed').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.eng').forEach(e=>e.classList.remove('open'));
+  if(!isOpen){ed.classList.add('open');eng.classList.add('open');}
+}
+</script>
