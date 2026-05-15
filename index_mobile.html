@@ -1,0 +1,846 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI Slice — Daily report · Nordwell Energy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..800;1,9..40,400..800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --tol-navy-900:#070452;--tol-navy-800:#0C0968;--tol-navy-700:#1B1790;
+  --tol-blue-600:#1C16C5;--tol-blue-500:#2E27E0;
+  --tol-cyan-500:#00C8FF;--tol-cyan-400:#3FD6FF;
+  --tol-ice-200:#ADFFFE;--tol-ice-100:#EBFFFF;--tol-ice-050:#F6FFFF;
+  --tol-coral:#FF4A6E;--tol-sun:#FFC83D;
+  --tol-ink-900:#070452;--tol-ink-700:#312E7A;--tol-ink-500:#6B69A8;
+  --tol-line-200:#D9DAF2;--tol-line-100:#EAEBF7;
+  --fg1:var(--tol-ink-900);--fg2:var(--tol-ink-700);--fg3:var(--tol-ink-500);
+  --font-brand:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-ui:"DM Sans",-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --px:16px;
+}
+@media(min-width:600px){:root{--px:28px;}}
+@media(min-width:1025px){:root{--px:48px;}}
+
+*{box-sizing:border-box;}
+html,body{margin:0;background:var(--tol-ice-050);color:var(--fg1);font-family:var(--font-ui);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.app{min-height:100vh;display:flex;flex-direction:column;}
+
+/* TOPBAR */
+.topbar{background:var(--tol-navy-900);color:#fff;padding:0 var(--px);height:52px;display:flex;align-items:center;gap:16px;border-bottom:1px solid rgba(255,255,255,0.06);position:sticky;top:0;z-index:50;}
+.topbar-wm{display:flex;align-items:baseline;gap:2px;font-family:var(--font-brand);font-weight:800;font-size:16px;letter-spacing:-0.02em;white-space:nowrap;}
+.topbar-wm .br{color:var(--tol-cyan-500);}
+.topbar-div{width:1px;height:18px;background:rgba(255,255,255,0.14);flex-shrink:0;}
+.topbar-op{font-size:12px;color:rgba(255,255,255,0.72);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.topbar-op strong{color:#fff;font-weight:600;}
+.topbar-spacer{flex:1;min-width:0;}
+.topbar-nav{display:flex;gap:18px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.72);}
+.topbar-nav a{color:inherit;cursor:pointer;padding:5px 0;border-bottom:2px solid transparent;text-decoration:none;white-space:nowrap;}
+.topbar-nav a.active{color:#fff;border-bottom-color:var(--tol-cyan-500);}
+.topbar-status{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.7);padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);white-space:nowrap;}
+.topbar-status .dot{width:6px;height:6px;border-radius:50%;background:#00D68F;box-shadow:0 0 0 3px rgba(0,214,143,0.18);flex-shrink:0;}
+.avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--tol-cyan-500),var(--tol-blue-500));display:flex;align-items:center;justify-content:center;color:var(--tol-navy-900);font-weight:700;font-size:10px;flex-shrink:0;}
+.topbar-uname{font-size:12px;font-weight:500;white-space:nowrap;}
+@media(max-width:767px){.topbar-nav,.topbar-uname,.topbar-status{display:none;}.topbar-div.d2{display:none;}}
+@media(min-width:768px)and(max-width:1100px){.topbar-nav{gap:12px;}}
+
+/* PAGE HEAD */
+.page-head{padding:20px var(--px) 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.page-head .title-row{display:flex;flex-direction:column;gap:5px;min-width:0;}
+.page-head .eyebrow{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:var(--tol-blue-600);}
+.page-head h1{font-family:var(--font-brand);font-size:clamp(28px,5vw,52px);font-weight:800;letter-spacing:-0.025em;line-height:1.04;margin:0;color:var(--tol-navy-900);}
+.page-head h1 .bracket{color:var(--tol-cyan-500);font-style:normal;}
+.page-head h1 .bracket::before{content:"[";}
+.page-head h1 .bracket::after{content:"]";}
+.page-head .meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--fg3);margin-top:2px;}
+.page-head .meta strong{color:var(--fg1);font-weight:600;}
+.page-head .meta .sep{color:var(--tol-line-200);}
+.controls{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+@media(max-width:499px){.page-head{flex-direction:column;}.page-head .meta .sep{display:none;}.controls{width:100%;}.seg{flex:1;}.seg button{flex:1;}}
+
+/* BUTTONS */
+.btn{font-family:var(--font-ui);font-size:12px;font-weight:600;padding:8px 13px;border-radius:8px;border:1px solid var(--tol-line-200);background:#fff;color:var(--tol-navy-900);cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background 140ms,border-color 140ms,transform 80ms;white-space:nowrap;}
+.btn:hover{background:var(--tol-ice-100);border-color:var(--tol-cyan-500);}
+.btn:active{transform:translateY(1px);}
+.btn-primary{background:var(--tol-blue-600);color:#fff;border-color:var(--tol-blue-600);}
+.btn-primary:hover{background:var(--tol-blue-500);border-color:var(--tol-blue-500);}
+.btn-text{display:none;}
+@media(min-width:600px){.btn-text{display:inline;}}
+.seg{display:inline-flex;padding:3px;background:#fff;border:1px solid var(--tol-line-200);border-radius:9px;gap:2px;}
+.seg button{border:none;background:transparent;font-family:var(--font-ui);font-size:11px;font-weight:600;padding:6px 10px;border-radius:6px;cursor:pointer;color:var(--fg2);}
+.seg button.on{background:var(--tol-navy-900);color:#fff;}
+
+/* PAGE BODY */
+.page-body{padding:0 var(--px) 56px;display:flex;flex-direction:column;gap:14px;}
+@media(min-width:768px){.page-body{gap:18px;}}
+@media(min-width:1025px){.page-body{gap:22px;}}
+
+.grid-8-4{display:grid;gap:14px;grid-template-columns:1fr;}
+@media(min-width:860px){.grid-8-4{grid-template-columns:2fr 1fr;gap:18px;}}
+@media(min-width:1025px){.grid-8-4{gap:22px;}}
+.grid-2col{display:grid;gap:14px;grid-template-columns:1fr;}
+@media(min-width:768px){.grid-2col{grid-template-columns:1fr 1fr;gap:18px;}}
+@media(min-width:1025px){.grid-2col{gap:22px;}}
+
+/* CARD */
+.card{background:#fff;border:1px solid var(--tol-line-200);border-radius:14px;padding:18px;width:100%;display:flex;flex-direction:column;transition:border-color 140ms,box-shadow 140ms;}
+@media(min-width:768px){.card{padding:22px;}}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:14px;}
+.card-head .lbl{display:flex;flex-direction:column;gap:3px;}
+.card-head .eyebrow{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--tol-cyan-500);}
+.card-head h3{margin:0;font-family:var(--font-brand);font-size:16px;font-weight:700;letter-spacing:-0.01em;color:var(--tol-navy-900);}
+@media(min-width:768px){.card-head h3{font-size:19px;}}
+.card-head .head-action{font-size:11px;font-weight:600;color:var(--tol-blue-600);cursor:pointer;padding:3px 0;border-bottom:1px solid currentColor;white-space:nowrap;flex-shrink:0;}
+.card-head .head-action:hover{opacity:0.7;}
+
+/* KPI STRIP */
+.kpi-strip{display:grid;grid-template-columns:1fr 1fr;background:var(--tol-navy-900);color:#fff;border-radius:14px;overflow:hidden;position:relative;box-shadow:0 10px 36px rgba(7,4,82,0.18);}
+@media(min-width:860px){.kpi-strip{grid-template-columns:repeat(4,1fr);border-radius:16px;}}
+.kpi-strip::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 15% 20%,rgba(0,200,255,0.10),transparent 60%);pointer-events:none;}
+.kpi{padding:18px 16px;border-right:1px solid rgba(255,255,255,0.08);position:relative;cursor:pointer;transition:background 140ms;}
+@media(min-width:600px){.kpi{padding:22px 20px;}}
+@media(min-width:860px){.kpi{padding:26px 24px;}}
+/* 2-col borders */
+.kpi:nth-child(2n){border-right:none;}
+.kpi:nth-child(1),.kpi:nth-child(2){border-bottom:1px solid rgba(255,255,255,0.08);}
+@media(min-width:860px){
+  .kpi{border-right:1px solid rgba(255,255,255,0.08);border-bottom:none;}
+  .kpi:nth-child(2n){border-right:1px solid rgba(255,255,255,0.08);}
+  .kpi:last-child{border-right:none;}
+  .kpi:nth-child(1),.kpi:nth-child(2){border-bottom:none;}
+}
+.kpi:hover{background:rgba(0,200,255,0.06);}
+.kpi .kpi-eyebrow{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--tol-cyan-500);display:flex;align-items:center;gap:7px;}
+.kpi .kpi-eyebrow .sparkline{height:11px;opacity:0.8;}
+.kpi .kpi-value{font-family:var(--font-brand);font-size:clamp(32px,4.5vw,60px);font-weight:800;letter-spacing:-0.035em;line-height:1.02;margin:10px 0 6px;color:#fff;display:flex;align-items:baseline;gap:2px;}
+.kpi .kpi-value .unit{font-size:clamp(15px,2.2vw,26px);font-weight:700;color:var(--tol-cyan-500);margin-left:2px;}
+.kpi .kpi-sub{font-size:11px;color:rgba(255,255,255,0.60);font-weight:500;}
+.kpi .kpi-delta{margin-top:10px;font-size:10px;font-weight:600;font-family:var(--font-mono);display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,0.16);color:#fff;}
+.kpi .kpi-delta.up{color:#6EFFC1;border-color:rgba(110,255,193,0.30);}
+.kpi .kpi-delta.dn{color:var(--tol-coral);border-color:rgba(255,74,110,0.30);}
+.kpi .kpi-delta.flat{color:rgba(255,255,255,0.62);}
+.kpi .kpi-cta{position:absolute;right:14px;top:14px;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--tol-cyan-500);opacity:0;transition:opacity 140ms;}
+.kpi:hover .kpi-cta{opacity:1;}
+
+/* NUM */
+.num{font-family:var(--font-brand);font-weight:800;color:inherit;cursor:pointer;position:relative;padding:0 2px;border-radius:4px;transition:background 140ms,color 140ms;display:inline-block;}
+.num::after{content:"";position:absolute;left:2px;right:2px;bottom:-2px;height:1px;background:currentColor;opacity:0.32;transition:opacity 140ms,background 140ms;}
+.num:hover{background:rgba(0,200,255,0.14);color:var(--tol-blue-600);}
+.num:hover::after{opacity:1;background:var(--tol-cyan-500);}
+
+/* TIER LIST */
+.tier-table-head{display:none;padding:0 8px 8px;border-bottom:1px solid var(--tol-line-200);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.10em;color:var(--fg3);margin-bottom:4px;}
+@media(min-width:768px){
+  .tier-table-head{display:grid;grid-template-columns:minmax(130px,2fr) minmax(100px,1.2fr) minmax(70px,0.8fr) minmax(88px,1fr) minmax(78px,0.9fr) 16px;gap:10px;}
+}
+.tier-list{display:flex;flex-direction:column;gap:0;flex:1;}
+
+/* Mobile tier row */
+.tier-row{display:flex;flex-direction:column;gap:8px;padding:12px 8px;border-radius:8px;cursor:pointer;transition:background 120ms;border-bottom:1px solid var(--tol-line-100);}
+.tier-row:last-child{border-bottom:none;}
+.tier-row:hover{background:var(--tol-ice-050);}
+.tr-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.tr-metrics{display:flex;gap:14px;padding-left:2px;}
+.tm{display:flex;flex-direction:column;gap:1px;}
+.tm .ml{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.10em;color:var(--fg3);}
+.tm .mv{font-family:var(--font-mono);font-size:12px;color:var(--tol-navy-900);white-space:nowrap;font-variant-numeric:tabular-nums;}
+/* Desktop tier row */
+@media(min-width:768px){
+  .tier-row{display:grid;grid-template-columns:minmax(130px,2fr) minmax(100px,1.2fr) minmax(70px,0.8fr) minmax(88px,1fr) minmax(78px,0.9fr) 16px;gap:10px;align-items:center;padding:14px 8px;flex-direction:unset;border-bottom:none;}
+  .tier-row+.tier-row{border-top:1px solid var(--tol-line-100);}
+  .tr-top{display:contents;}
+  .tr-metrics{display:contents;}
+  .tm{display:contents;}
+  .tm .ml{display:none;}
+  .tm .mv{font-size:13px;}
+}
+.tier-name{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.tier-name .tn{font-weight:700;font-size:13px;color:var(--tol-navy-900);line-height:1.25;}
+@media(min-width:768px){.tier-name .tn{font-size:14px;}}
+.tier-name .tw{font-size:11px;color:var(--fg3);line-height:1.3;}
+.tier-bar{display:flex;flex-direction:column;gap:4px;min-width:0;}
+.bar-track{height:5px;background:var(--tol-line-100);border-radius:999px;overflow:hidden;}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--tol-blue-600),var(--tol-cyan-500));border-radius:999px;}
+.tier-bar .pct{font-family:var(--font-mono);font-size:10px;color:var(--fg3);}
+.tier-metric{font-family:var(--font-mono);font-size:13px;color:var(--tol-navy-900);white-space:nowrap;font-variant-numeric:tabular-nums;}
+.chev{text-align:right;color:var(--fg3);font-size:15px;opacity:0.4;transition:opacity 120ms,color 120ms,transform 120ms;}
+.tier-row:hover .chev{opacity:1;color:var(--tol-blue-600);transform:translateX(2px);}
+
+/* OPS */
+.ops-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--tol-line-100);border-radius:10px;overflow:hidden;margin-bottom:12px;}
+.ops-summary>div{background:#fff;padding:11px 10px;display:flex;flex-direction:column;gap:3px;cursor:pointer;transition:background 120ms;}
+.ops-summary>div:hover{background:var(--tol-ice-050);}
+.ops-summary .lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--fg3);}
+.ops-summary .val{font-family:var(--font-brand);font-weight:800;font-size:22px;letter-spacing:-0.02em;color:var(--tol-navy-900);}
+@media(min-width:768px){.ops-summary .val{font-size:26px;}}
+.ops-list{display:flex;flex-direction:column;gap:5px;flex:1;}
+.ops-item{padding:10px 11px;border:1px solid var(--tol-line-100);border-radius:9px;cursor:pointer;transition:border-color 120ms,background 120ms;}
+.ops-item:hover{border-color:rgba(0,200,255,0.40);background:var(--tol-ice-050);}
+.ops-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:5px;}
+.ops-name{font-weight:600;font-size:12px;color:var(--tol-navy-900);display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;}
+.ops-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ops-id{font-family:var(--font-mono);font-size:9px;color:var(--fg3);flex-shrink:0;}
+.ops-asset{font-size:11px;color:var(--fg3);font-weight:500;}
+.ops-eta{font-family:var(--font-mono);font-size:10px;color:var(--fg3);}
+.ops-bar{height:3px;background:var(--tol-line-100);border-radius:999px;overflow:hidden;margin-top:6px;}
+.ops-bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--tol-cyan-500),var(--tol-blue-500));border-radius:999px;}
+
+/* STATE PILLS */
+.state-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:999px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.10em;flex-shrink:0;}
+.state-pill .dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.state-pill.running{background:rgba(0,214,143,0.12);color:#06754F;}
+.state-pill.running .dot{background:#00D68F;box-shadow:0 0 0 2px rgba(0,214,143,0.30);animation:pulse 1.6s infinite;}
+.state-pill.queued{background:var(--tol-line-100);color:var(--fg2);}
+.state-pill.queued .dot{background:var(--fg3);}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px rgba(0,214,143,0.30);}50%{box-shadow:0 0 0 5px rgba(0,214,143,0.05);}}
+
+/* CYBER */
+.cyber-stat-row{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:10px;margin-bottom:12px;}
+.cyber-big{display:flex;flex-direction:column;gap:3px;}
+.cyber-big .v{font-family:var(--font-brand);font-weight:800;font-size:clamp(36px,5.5vw,60px);letter-spacing:-0.035em;line-height:1;color:var(--tol-navy-900);}
+.cyber-big .l{font-size:11px;color:var(--fg3);font-weight:500;}
+.cyber-side{display:flex;flex-direction:column;gap:2px;}
+.cyber-side .v{font-family:var(--font-brand);font-weight:800;font-size:clamp(18px,2.8vw,26px);letter-spacing:-0.02em;color:var(--tol-navy-900);}
+.cyber-side .l{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--fg3);}
+.spark-row{display:flex;align-items:flex-end;gap:2px;height:44px;margin-bottom:8px;}
+@media(min-width:600px){.spark-row{height:52px;gap:3px;}}
+.spark-row .bar{flex:1;background:linear-gradient(180deg,var(--tol-cyan-500),var(--tol-blue-600));border-radius:2px;min-height:3px;cursor:pointer;opacity:0.85;transition:opacity 120ms,transform 120ms;position:relative;}
+.spark-row .bar:hover{opacity:1;transform:scaleY(1.05);transform-origin:bottom;}
+.spark-row .bar .tip{position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);background:var(--tol-navy-900);color:#fff;padding:3px 7px;border-radius:5px;font-size:10px;font-family:var(--font-mono);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 120ms;z-index:10;}
+.spark-row .bar:hover .tip{opacity:1;}
+.spark-axis{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:9px;color:var(--fg3);margin-bottom:10px;}
+.vector-list{display:flex;flex-direction:column;}
+.vector-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:6px 0;border-top:1px solid var(--tol-line-100);cursor:pointer;}
+.vector-row:first-child{border-top:none;}
+.vector-row:hover .vname{color:var(--tol-blue-600);}
+.vname{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:var(--tol-navy-900);}
+.sev-dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.sev-dot.high{background:var(--tol-coral);box-shadow:0 0 0 2px rgba(255,74,110,0.18);}
+.sev-dot.medium{background:var(--tol-sun);box-shadow:0 0 0 2px rgba(255,200,61,0.18);}
+.sev-dot.low{background:var(--tol-cyan-500);box-shadow:0 0 0 2px rgba(0,200,255,0.18);}
+
+/* SLA */
+.sla-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+@media(max-width:360px){.sla-summary{grid-template-columns:repeat(2,1fr);}}
+.sla-pill{padding:9px 10px;border-radius:9px;background:var(--tol-ice-050);border:1px solid var(--tol-line-100);display:flex;flex-direction:column;gap:2px;cursor:pointer;transition:border-color 120ms;}
+.sla-pill:hover{border-color:var(--tol-cyan-500);}
+.sla-pill .v{font-family:var(--font-brand);font-weight:800;font-size:19px;letter-spacing:-0.02em;color:var(--tol-navy-900);}
+@media(min-width:768px){.sla-pill .v{font-size:22px;}}
+.sla-pill .l{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.10em;color:var(--fg3);}
+.sla-pill.breach{background:rgba(255,74,110,0.08);border-color:rgba(255,74,110,0.20);}
+.sla-pill.breach .v{color:#B7314B;}
+.sla-pill.degraded{background:rgba(255,200,61,0.10);border-color:rgba(255,200,61,0.25);}
+.sla-pill.warning{background:rgba(0,200,255,0.08);border-color:rgba(0,200,255,0.25);}
+.sla-table-head{display:none;}
+@media(min-width:860px){
+  .sla-table-head{display:grid;grid-template-columns:10px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 16px;gap:10px;padding:0 4px 8px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--fg3);}
+}
+.sla-list{display:flex;flex-direction:column;}
+/* Mobile SLA row */
+.sla-row{display:flex;flex-direction:column;gap:4px;padding:9px 4px;border-top:1px solid var(--tol-line-100);cursor:pointer;transition:background 120ms;position:relative;padding-right:20px;}
+.sla-row:first-of-type{border-top:1px solid var(--tol-line-200);}
+.sla-row:hover{background:var(--tol-ice-050);}
+.sr-top{display:flex;align-items:flex-start;gap:7px;}
+.sr-bot{display:flex;flex-wrap:wrap;gap:6px;padding-left:14px;margin-top:2px;}
+.sla-row .sn{font-weight:600;font-size:12px;color:var(--tol-navy-900);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sla-row .sid{font-family:var(--font-mono);font-size:9px;color:var(--fg3);}
+.sla-row .sass{font-size:11px;color:var(--fg2);font-weight:500;}
+.sla-row .st,.sla-row .sa{font-family:var(--font-mono);font-size:10px;color:var(--fg3);}
+.sla-row .sa{color:var(--tol-navy-900);font-weight:500;}
+.sr-chev{position:absolute;right:4px;top:50%;transform:translateY(-50%);color:var(--fg3);opacity:0.5;font-size:13px;}
+.sla-row:hover .sr-chev{color:var(--tol-blue-600);opacity:1;}
+/* Desktop SLA row */
+@media(min-width:860px){
+  .sla-row{display:grid;grid-template-columns:10px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) 16px;gap:10px;align-items:center;padding:10px 4px;flex-direction:unset;padding-right:4px;}
+  .sr-top{display:contents;}
+  .sr-bot{display:contents;}
+  .sla-row .sn{font-size:13px;}
+  .sla-row .st,.sla-row .sa{font-size:11px;}
+  .sr-chev{position:static;transform:none;}
+}
+.snw{display:flex;flex-direction:column;gap:1px;min-width:0;}
+
+/* FOOTER */
+.page-foot{padding:12px var(--px) 36px;display:flex;flex-direction:column;gap:6px;font-size:11px;color:var(--fg3);}
+@media(min-width:600px){.page-foot{flex-direction:row;justify-content:space-between;align-items:center;font-size:12px;}}
+.page-foot .legal{display:flex;gap:10px;flex-wrap:wrap;}
+
+/* DRAWER */
+.drawer-scrim{position:fixed;inset:0;background:rgba(7,4,82,0.46);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:80;opacity:0;pointer-events:none;transition:opacity 220ms;}
+.drawer-scrim.open{opacity:1;pointer-events:auto;}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:100%;background:#fff;z-index:90;transform:translateX(100%);transition:transform 320ms cubic-bezier(0.2,0.8,0.2,1.0);display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(7,4,82,0.18);}
+@media(min-width:540px){.drawer{width:460px;max-width:94vw;}}
+@media(min-width:900px){.drawer{width:540px;}}
+.drawer.open{transform:translateX(0);}
+.drawer-head{padding:16px 18px 12px;border-bottom:1px solid var(--tol-line-200);display:flex;flex-direction:column;gap:5px;}
+@media(min-width:540px){.drawer-head{padding:22px 26px 16px;}}
+.drawer-head .drow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.drawer-head .eyebrow{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.16em;color:var(--tol-cyan-500);}
+.drawer-head h2{margin:0;font-family:var(--font-brand);font-size:21px;font-weight:800;letter-spacing:-0.025em;color:var(--tol-navy-900);}
+@media(min-width:540px){.drawer-head h2{font-size:26px;}}
+.drawer-head .sub{font-size:12px;color:var(--fg3);font-weight:500;line-height:1.5;}
+.drawer-close{border:1px solid var(--tol-line-200);background:#fff;border-radius:7px;padding:5px 9px;cursor:pointer;font-family:var(--font-mono);font-size:10px;color:var(--fg2);display:inline-flex;align-items:center;gap:4px;flex-shrink:0;}
+.drawer-close:hover{border-color:var(--tol-cyan-500);color:var(--tol-navy-900);}
+.drawer-body{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding:16px 18px 24px;display:flex;flex-direction:column;gap:16px;}
+@media(min-width:540px){.drawer-body{padding:22px 26px 28px;gap:20px;}}
+.drawer-section h4{margin:0 0 10px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--fg3);}
+.dkv{display:grid;grid-template-columns:1fr auto;font-size:12px;border-top:1px solid var(--tol-line-100);padding:8px 0;}
+.dkv:first-child{border-top:none;}
+.dkv .k{color:var(--fg3);}
+.dkv .v{font-family:var(--font-mono);color:var(--tol-navy-900);font-weight:500;text-align:right;}
+.bd-bar{display:flex;height:9px;border-radius:999px;overflow:hidden;margin-bottom:10px;background:var(--tol-line-100);}
+.bd-bar>span{height:100%;display:block;}
+.bd-legend{display:flex;flex-direction:column;gap:7px;}
+.bd-legend .lg{display:grid;grid-template-columns:11px 1fr auto auto;gap:8px;align-items:center;font-size:12px;}
+.bd-legend .lg .sw{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.bd-legend .lg .n{color:var(--tol-navy-900);font-weight:500;}
+.bd-legend .lg .c{font-family:var(--font-mono);color:var(--fg3);font-size:11px;}
+.bd-legend .lg .p{font-family:var(--font-mono);font-size:11px;color:var(--tol-navy-900);font-weight:600;}
+.callout{border:1px solid var(--tol-line-200);background:var(--tol-ice-100);border-radius:9px;padding:11px 13px;font-size:12px;line-height:1.6;color:var(--fg2);}
+.callout strong{color:var(--tol-navy-900);}
+.timeline{display:flex;flex-direction:column;}
+.tl-row{display:grid;grid-template-columns:58px 1fr auto;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--tol-line-100);}
+.tl-row:first-child{border-top:none;}
+.tl-row .time{font-family:var(--font-mono);font-size:11px;color:var(--fg3);}
+.tl-row .body{font-size:12px;color:var(--tol-navy-900);}
+.tl-row .body .meta{font-size:11px;color:var(--fg3);margin-top:2px;line-height:1.4;}
+
+/* DARK SHELL */
+body.dark-shell{background:var(--tol-navy-900);color:#fff;}
+body.dark-shell .page-head h1{color:#fff;}
+body.dark-shell .card{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.10);color:#fff;}
+body.dark-shell .card-head h3{color:#fff;}
+body.dark-shell .tier-name .tn,body.dark-shell .tier-metric,body.dark-shell .tm .mv,
+body.dark-shell .ops-summary .val,body.dark-shell .cyber-big .v,body.dark-shell .cyber-side .v,
+body.dark-shell .sla-pill .v,body.dark-shell .sla-row .sn,body.dark-shell .sla-row .sa{color:#fff;}
+body.dark-shell .tier-row,body.dark-shell .tier-row+.tier-row,body.dark-shell .tier-table-head,
+body.dark-shell .ops-item,body.dark-shell .sla-row,body.dark-shell .vector-row{border-color:rgba(255,255,255,0.10);}
+body.dark-shell .tier-row:hover,body.dark-shell .ops-item:hover,body.dark-shell .sla-row:hover{background:rgba(0,200,255,0.05);}
+body.dark-shell .ops-summary{background:rgba(255,255,255,0.06);}
+body.dark-shell .ops-summary>div{background:rgba(255,255,255,0.02);}
+body.dark-shell .sla-pill{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.10);}
+body.dark-shell .bar-track,body.dark-shell .ops-item .ops-bar{background:rgba(255,255,255,0.10);}
+body.dark-shell .btn{background:rgba(255,255,255,0.06);color:#fff;border-color:rgba(255,255,255,0.14);}
+body.dark-shell .seg{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.14);}
+body.dark-shell .seg button{color:rgba(255,255,255,0.72);}
+body.dark-shell .seg button.on{background:var(--tol-cyan-500);color:var(--tol-navy-900);}
+body.dark-shell .topbar{border-bottom:none;}
+body.dark-shell .page-foot{color:rgba(255,255,255,0.50);}
+body.dark-shell .drawer{background:#0C0968;}
+body.dark-shell .drawer-head{border-bottom-color:rgba(255,255,255,0.10);}
+body.dark-shell .drawer-head h2{color:#fff;}
+body.dark-shell .drawer-head .sub{color:rgba(255,255,255,0.55);}
+body.dark-shell .dkv{border-top-color:rgba(255,255,255,0.08);}
+body.dark-shell .dkv .k{color:rgba(255,255,255,0.45);}
+body.dark-shell .dkv .v{color:#fff;}
+body.dark-shell .callout{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.10);color:rgba(255,255,255,0.72);}
+body.dark-shell .callout strong{color:#fff;}
+body.dark-shell .tl-row{border-top-color:rgba(255,255,255,0.08);}
+body.dark-shell .tl-row .time{color:rgba(255,255,255,0.40);}
+body.dark-shell .tl-row .body{color:#fff;}
+body.dark-shell .tl-row .body .meta{color:rgba(255,255,255,0.45);}
+body.dark-shell .drawer-close{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.14);color:rgba(255,255,255,0.72);}
+body.dark-shell .bd-legend .lg .n{color:#fff;}
+body.dark-shell .bd-legend .lg .p{color:rgba(255,255,255,0.80);}
+body.dark-shell .drawer-section h4{color:rgba(255,255,255,0.45);}
+body.dark-shell .vname{color:rgba(255,255,255,0.85);}
+body.dark-shell .sla-pill.breach .v{color:var(--tol-coral);}
+body.dark-shell .tm .ml{color:rgba(255,255,255,0.40);}
+body.dark-shell .sla-row .sass,.sla-row .st{color:rgba(255,255,255,0.55);}
+
+/* TWEAKS */
+.twk-fab{position:fixed;right:12px;bottom:12px;z-index:199;border:1px solid rgba(255,255,255,0.18);background:rgba(7,4,82,0.88);color:#fff;border-radius:10px;padding:7px 13px;font-size:11px;font-weight:600;cursor:pointer;backdrop-filter:blur(8px);display:flex;align-items:center;gap:5px;}
+.twk-panel{position:fixed;right:10px;bottom:10px;z-index:200;width:256px;max-height:calc(100vh - 20px);display:flex;flex-direction:column;background:rgba(250,249,247,.94);color:#29261b;backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border:.5px solid rgba(255,255,255,.6);border-radius:14px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden;}
+.twk-hd{display:flex;align-items:center;justify-content:space-between;padding:9px 8px 9px 13px;user-select:none;}
+.twk-hd b{font-size:12px;font-weight:600;}
+.twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);width:22px;height:22px;border-radius:6px;cursor:pointer;font-size:13px;line-height:1;}
+.twk-x:hover{background:rgba(0,0,0,.06);color:#29261b;}
+.twk-body{padding:2px 13px 13px;display:flex;flex-direction:column;gap:9px;overflow-y:auto;min-height:0;}
+.twk-sect{font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(41,38,27,.45);padding:8px 0 0;}
+.twk-sect:first-child{padding-top:0;}
+.twk-row{display:flex;flex-direction:column;gap:5px;}
+.twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;}
+.twk-lbl{display:flex;justify-content:space-between;align-items:baseline;color:rgba(41,38,27,.72);}
+.twk-lbl>span:first-child{font-weight:500;}
+.twk-seg{position:relative;display:flex;padding:2px;border-radius:7px;background:rgba(0,0,0,.06);}
+.twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:5px;background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);transition:left .15s,width .15s;}
+.twk-seg button{position:relative;z-index:1;flex:1;border:0;background:transparent;color:inherit;font:inherit;font-weight:500;min-height:21px;border-radius:5px;cursor:pointer;padding:4px 6px;}
+.twk-toggle{position:relative;width:30px;height:17px;border:0;border-radius:999px;background:rgba(0,0,0,.15);transition:background .15s;cursor:pointer;padding:0;flex-shrink:0;}
+.twk-toggle[data-on="1"]{background:#34c759;}
+.twk-toggle i{position:absolute;top:1.5px;left:1.5px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s;pointer-events:none;}
+.twk-toggle[data-on="1"] i{transform:translateX(13px);}
+.twk-chips{display:flex;gap:5px;}
+.twk-chip{position:relative;flex:1;height:30px;border:0;border-radius:6px;overflow:hidden;cursor:pointer;box-shadow:0 0 0 .5px rgba(0,0,0,.12);transition:transform .12s;}
+.twk-chip:hover{transform:translateY(-1px);}
+.twk-chip[data-on="1"]{box-shadow:0 0 0 2px rgba(0,0,0,.85);}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin></script>
+
+<script>
+window.appData={
+  operator:"Nordwell Energy AS",reportDate:"Friday, 15 May 2026",reportPeriod:"00:00 — 23:59 CEST",syncedAt:"just now · 14:32 CEST",
+  assets:["Åsgard B","Heidrun","Snøhvit","Statfjord A","Mariner","Johan Sverdrup","Troll A","Aasta Hansteen","Ormen Lange","Draugen","Goliat","Edvard Grieg"],
+  controlCentres:["Stavanger Onshore Ops","Bergen Drilling Centre","Trondheim AI Hub","Hammerfest LNG Control"],
+  kpis:{
+    computeProcesses:{value:12847,delta:"+412 vs. 7-day avg",deltaDir:"up",sub:"across 12 offshore assets"},
+    costSavings:{value:23.4,unit:"%",delta:"+1.8 pp vs. last week",deltaDir:"up",sub:"≈ NOK 4.2 M avoided"},
+    emissionsSavings:{value:17.8,unit:"%",delta:"+0.6 pp vs. last week",deltaDir:"up",sub:"≈ 38.4 t CO₂e avoided"},
+    slaDelivery:{value:99.71,unit:"%",delta:"23 deviations / 12,847",deltaDir:"flat",sub:"target 99.50%"},
+  },
+  tiers:[
+    {id:"edge",  name:"Customer edge",              where:"Offshore — on platform",           latency:"< 5 ms",   count:4210,share:32.8,cost:612000,co2:4.2,examples:["Flare video analytics — Snøhvit","Valve actuator control — Åsgard B","Drilling RT inference — Heidrun"]},
+    {id:"near",  name:"Telco near edge",             where:"Sandsli · Stavanger · Hammerfest", latency:"8–14 ms",  count:3876,share:30.2,cost:484000,co2:5.8,examples:["ROV pilot assist — Troll A","Pipeline integrity scoring","Wellhead anomaly detection"]},
+    {id:"far",   name:"Telco far edge",              where:"Kjeller · Bergen",                 latency:"18–28 ms", count:2104,share:16.4,cost:220000,co2:3.1,examples:["Multi-asset digital twin sync","Maintenance scheduler v4","Fleet-wide drone tasking"]},
+    {id:"nscale",name:"Sovereign AI cloud (Nscale)", where:"Glomfjord — sovereign region",     latency:"32–48 ms", count:1892,share:14.7,cost:184000,co2:2.4,examples:["Reservoir simulation training","Foundation model fine-tunes","Seismic re-interpretation"]},
+    {id:"cloud", name:"Public cloud",                where:"Hyperscaler · West Europe",        latency:"55–90 ms", count:765, share:5.9, cost:142000,co2:3.6,examples:["Long-horizon analytics","Reporting data lake","Compliance archival jobs"]},
+  ],
+  autonomous:{running:28,queued:9,completedToday:142,
+    items:[
+      {id:"AO-2841",name:"Drone deck inspection",             asset:"Heidrun",        state:"running",progress:64,tier:"edge",  eta:"12 min"},
+      {id:"AO-2840",name:"Flare stack thermal scan",          asset:"Snøhvit",        state:"running",progress:38,tier:"edge",  eta:"27 min"},
+      {id:"AO-2839",name:"Subsea ROV survey loop",            asset:"Troll A",        state:"running",progress:81,tier:"near",  eta:"6 min"},
+      {id:"AO-2838",name:"Robotic valve inspection",          asset:"Åsgard B",       state:"queued", progress:0, tier:"edge",  eta:"queued"},
+      {id:"AO-2837",name:"Turbine optimisation loop",         asset:"Aasta Hansteen", state:"running",progress:92,tier:"near",  eta:"2 min"},
+      {id:"AO-2836",name:"Digital twin reconciliation",       asset:"Johan Sverdrup", state:"running",progress:54,tier:"far",   eta:"18 min"},
+      {id:"AO-2835",name:"Predictive maint. — compressor C3",asset:"Mariner",        state:"running",progress:22,tier:"edge",  eta:"41 min"},
+      {id:"AO-2834",name:"Seismic re-pick batch",             asset:"Statfjord A",    state:"queued", progress:0, tier:"nscale",eta:"queued"},
+    ]},
+  cyber:{prevented:247,critical:4,isolated:12,
+    hourly:[3,2,5,4,2,6,9,12,18,16,14,11,9,13,21,19,17,15,12,9,7,6,4,3],
+    vectors:[{name:"Malware drop",count:98,severity:"high"},{name:"Brute-force / credential",count:52,severity:"medium"},{name:"DDoS / volumetric",count:43,severity:"medium"},{name:"Exfiltration attempt",count:28,severity:"high"},{name:"Reconnaissance scan",count:26,severity:"low"}],
+    recent:[
+      {time:"14:21",asset:"Johan Sverdrup",vector:"Exfiltration attempt",action:"Slice isolated · traffic dropped",severity:"high"},
+      {time:"13:48",asset:"Bergen far edge",vector:"DDoS / volumetric",action:"Rate-limited at far edge",severity:"medium"},
+      {time:"12:55",asset:"Heidrun",vector:"Malware drop",action:"Quarantined at customer edge",severity:"high"},
+      {time:"11:32",asset:"Troll A",vector:"Brute-force",action:"Credential rotated · alert sent",severity:"medium"},
+    ]},
+  sla:{total:23,breakdown:{breach:4,degraded:12,warning:7},
+    items:[
+      {id:"WL-90213",name:"Real-time well-head telemetry",asset:"Mariner",       tier:"edge",  target:"99.95% < 8 ms", actual:"98.42% · p99 14 ms",severity:"breach"},
+      {id:"WL-90187",name:"ROV pilot assist inference",   asset:"Troll A",       tier:"near",  target:"99.90% < 12 ms",actual:"99.41% · p99 19 ms",severity:"breach"},
+      {id:"WL-90142",name:"Flare video analytics",        asset:"Snøhvit",       tier:"edge",  target:"99.95% < 10 ms",actual:"99.62% · p99 13 ms",severity:"degraded"},
+      {id:"WL-90109",name:"Drone tasking orchestration",  asset:"Heidrun",       tier:"far",   target:"99.90% < 30 ms",actual:"99.58% · p99 41 ms",severity:"degraded"},
+      {id:"WL-90088",name:"Twin reconciliation pull",     asset:"Johan Sverdrup",tier:"far",   target:"99.50% < 50 ms",actual:"99.21% · p99 62 ms",severity:"warning"},
+      {id:"WL-90071",name:"Predictive maint. — C3",       asset:"Mariner",       tier:"edge",  target:"99.95% < 8 ms", actual:"99.71% · p99 11 ms",severity:"degraded"},
+      {id:"WL-90052",name:"Compliance archival batch",    asset:"All assets",    tier:"cloud", target:"99.00% < 5 min",actual:"97.82% · p99 8 min", severity:"warning"},
+    ]},
+};
+window.fmt={
+  int:(n)=>n.toLocaleString("en-US"),
+  nok:(n)=>{if(n>=1e6)return"NOK "+(n/1e6).toFixed(2)+" M";if(n>=1e3)return"NOK "+(n/1e3).toFixed(0)+" k";return"NOK "+n;},
+  co2:(t)=>t.toFixed(1)+" t CO₂e",
+};
+const TC={edge:"#00C8FF",near:"#3FD6FF",far:"#1C16C5",nscale:"#070452",cloud:"#6B69A8"};
+function tc(id){return TC[id]||"#6B69A8";}
+</script>
+
+<script type="text/babel">
+const {useState,useEffect}=React;
+
+function Num({value,onClick}){return <span className="num" role="button" tabIndex={0} onClick={e=>{e.stopPropagation();onClick&&onClick();}} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onClick&&onClick();}}}>{value}</span>;}
+function Spark({points,w=52,h=11,stroke="#00C8FF"}){const mx=Math.max(...points),mn=Math.min(...points),rng=mx-mn||1,st=w/(points.length-1);const d=points.map((p,i)=>`${i===0?"M":"L"} ${(i*st).toFixed(1)} ${(h-((p-mn)/rng)*h).toFixed(1)}`).join(" ");return <svg className="sparkline" viewBox={`0 0 ${w} ${h}`} width={w} height={h} fill="none"><path d={d} stroke={stroke} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;}
+function Pill({state}){return <span className={`state-pill ${state}`}><span className="dot"/>{state}</span>;}
+
+function TopBar(){return(
+  <div className="topbar">
+    <div className="topbar-wm"><span>Telenor's</span><span className="br">&nbsp;[AI]&nbsp;</span><span>Slice</span></div>
+    <div className="topbar-div"/>
+    <div className="topbar-op"><strong>{window.appData.operator}</strong></div>
+    <div className="topbar-spacer"/>
+    <nav className="topbar-nav"><a className="active">Daily report</a><a>Live ops</a><a>Workloads</a><a>Slices</a><a>Billing</a></nav>
+    <div className="topbar-status"><span className="dot"/><span>Synced {window.appData.syncedAt}</span></div>
+    <div className="topbar-div d2"/>
+    <div className="avatar">IH</div>
+    <span className="topbar-uname">Ingrid Halvorsen</span>
+  </div>
+);}
+
+function PageHead({period,setPeriod}){const {reportDate,assets,controlCentres}=window.appData;return(
+  <div className="page-head">
+    <div className="title-row">
+      <div className="eyebrow">AI Slice · Operations</div>
+      <h1>Daily <em className="bracket">report</em></h1>
+      <div className="meta">
+        <span><strong>{reportDate}</strong></span>
+        <span className="sep">·</span><span>{assets.length} offshore assets</span>
+        <span className="sep">·</span><span>{controlCentres.length} control centres</span>
+      </div>
+    </div>
+    <div className="controls">
+      <div className="seg">{["Today","7d","30d","QTD"].map(p=><button key={p} className={p===period?"on":""} onClick={()=>setPeriod(p)}>{p}</button>)}</div>
+      <button className="btn">⤓<span className="btn-text"> Export</span></button>
+      <button className="btn btn-primary"><span className="btn-text">Share </span>→</button>
+    </div>
+  </div>
+);}
+
+function KpiStrip({openDrawer}){const k=window.appData.kpis;
+  const items=[
+    {key:"compute",ey:"Compute processes",val:window.fmt.int(k.computeProcesses.value),unit:null,sub:k.computeProcesses.sub,delta:k.computeProcesses.delta,dir:k.computeProcesses.deltaDir,sp:[42,48,51,47,55,58,62,60,64,68,71,74]},
+    {key:"cost",   ey:"NOK cost savings", val:k.costSavings.value.toFixed(1),unit:k.costSavings.unit,sub:k.costSavings.sub,delta:k.costSavings.delta,dir:k.costSavings.deltaDir,sp:[18,19,19,21,20,22,21,22,22,23,23,23.4]},
+    {key:"emissions",ey:"Emissions savings",val:k.emissionsSavings.value.toFixed(1),unit:k.emissionsSavings.unit,sub:k.emissionsSavings.sub,delta:k.emissionsSavings.delta,dir:k.emissionsSavings.deltaDir,sp:[14,15,15,16,15,16,16,17,17,17,17.5,17.8]},
+    {key:"sla",    ey:"Delivered to SLA",  val:k.slaDelivery.value.toFixed(2),unit:k.slaDelivery.unit,sub:k.slaDelivery.sub,delta:k.slaDelivery.delta,dir:k.slaDelivery.deltaDir,sp:[99.8,99.7,99.6,99.8,99.9,99.7,99.5,99.7,99.8,99.7,99.71,99.71]},
+  ];
+  return(<div className="kpi-strip">{items.map(it=>(
+    <div key={it.key} className="kpi" onClick={()=>openDrawer(it.key)}>
+      <div className="kpi-eyebrow"><span># {it.ey}</span><Spark points={it.sp}/></div>
+      <div className="kpi-value"><span>{it.val}</span>{it.unit&&<span className="unit">{it.unit}</span>}</div>
+      <div className="kpi-sub">{it.sub}</div>
+      <div className={`kpi-delta ${it.dir}`}><span>{it.dir==="up"?"↑":it.dir==="dn"?"↓":"→"}</span><span>{it.delta}</span></div>
+      <div className="kpi-cta">Breakdown →</div>
+    </div>
+  ))}</div>);}
+
+function ComputeBreakdown({openDrawer}){const tiers=window.appData.tiers,total=tiers.reduce((s,t)=>s+t.count,0);return(
+  <div className="card">
+    <div className="card-head"><div className="lbl"><div className="eyebrow">Compute processes</div><h3>By placement tier</h3></div><span className="head-action" onClick={()=>openDrawer("compute")}>View all {window.fmt.int(total)} →</span></div>
+    <div className="tier-table-head"><span>Tier</span><span>Share</span><span>Processes</span><span>Cost / day</span><span>CO₂e / day</span><span></span></div>
+    <div className="tier-list">{tiers.map(t=>(
+      <div key={t.id} className="tier-row" onClick={()=>openDrawer("tier:"+t.id)}>
+        <div className="tr-top">
+          <div className="tier-name"><span className="tn">{t.name}</span><span className="tw">{t.where} · {t.latency}</span></div>
+          <div className="tier-bar"><div className="bar-track"><div className="bar-fill" style={{width:`${t.share}%`}}/></div><span className="pct">{t.share.toFixed(1)}%</span></div>
+        </div>
+        <div className="tr-metrics">
+          <div className="tm"><span className="ml">Processes</span><span className="mv tier-metric"><Num value={window.fmt.int(t.count)} onClick={()=>openDrawer("tier:"+t.id)}/></span></div>
+          <div className="tm"><span className="ml">Cost/day</span><span className="mv tier-metric">{window.fmt.nok(t.cost)}</span></div>
+          <div className="tm"><span className="ml">CO₂e/day</span><span className="mv tier-metric">{window.fmt.co2(t.co2)}</span></div>
+        </div>
+        <div className="chev">›</div>
+      </div>
+    ))}</div>
+  </div>
+);}
+
+function AutonomousOps({openDrawer}){const a=window.appData.autonomous;return(
+  <div className="card">
+    <div className="card-head"><div className="lbl"><div className="eyebrow">Autonomous operations</div><h3>Running on AI Slice</h3></div><span className="head-action" onClick={()=>openDrawer("autonomous")}>All ops →</span></div>
+    <div className="ops-summary">
+      <div onClick={()=>openDrawer("autonomous:running")}><span className="lbl"># Running</span><span className="val"><Num value={a.running} onClick={()=>openDrawer("autonomous:running")}/></span></div>
+      <div onClick={()=>openDrawer("autonomous:queued")}><span className="lbl"># Queued</span><span className="val"><Num value={a.queued} onClick={()=>openDrawer("autonomous:queued")}/></span></div>
+      <div onClick={()=>openDrawer("autonomous:done")}><span className="lbl"># Done today</span><span className="val"><Num value={a.completedToday} onClick={()=>openDrawer("autonomous:done")}/></span></div>
+    </div>
+    <div className="ops-list">{a.items.slice(0,5).map(it=>(
+      <div key={it.id} className="ops-item" onClick={()=>openDrawer("op:"+it.id)}>
+        <div className="ops-top"><div className="ops-name"><Pill state={it.state}/><span>{it.name}</span></div><span className="ops-id">{it.id}</span></div>
+        <div className="ops-top" style={{marginBottom:0}}><span className="ops-asset">{it.asset} · {it.tier}</span><span className="ops-eta">{it.eta}</span></div>
+        <div className="ops-bar"><span style={{width:`${it.progress}%`}}/></div>
+      </div>
+    ))}</div>
+  </div>
+);}
+
+function CyberCard({openDrawer}){const c=window.appData.cyber,mx=Math.max(...c.hourly);return(
+  <div className="card">
+    <div className="card-head"><div className="lbl"><div className="eyebrow">Security</div><h3>Cyber attacks prevented</h3></div><span className="head-action" onClick={()=>openDrawer("cyber")}>Threat log →</span></div>
+    <div className="cyber-stat-row">
+      <div className="cyber-big"><span className="v"><Num value={window.fmt.int(c.prevented)} onClick={()=>openDrawer("cyber")}/></span><span className="l">prevented today · 24 h</span></div>
+      <div className="cyber-side"><span className="v"><Num value={c.critical} onClick={()=>openDrawer("cyber:critical")}/></span><span className="l"># critical</span></div>
+      <div className="cyber-side"><span className="v"><Num value={c.isolated} onClick={()=>openDrawer("cyber:isolated")}/></span><span className="l">auto-isolated</span></div>
+    </div>
+    <div className="spark-row">{c.hourly.map((v,i)=><div key={i} className="bar" style={{height:`${(v/mx)*100}%`}} onClick={()=>openDrawer("cyber:hour:"+i)}><span className="tip">{v} · {String(i).padStart(2,"0")}:00</span></div>)}</div>
+    <div className="spark-axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>now</span></div>
+    <div className="vector-list">{c.vectors.map(v=>(
+      <div key={v.name} className="vector-row" onClick={()=>openDrawer("cyber:vector:"+v.name)}>
+        <div className="vname"><span className={`sev-dot ${v.severity}`}/><span>{v.name}</span></div>
+        <Num value={v.count} onClick={()=>openDrawer("cyber:vector:"+v.name)}/>
+      </div>
+    ))}</div>
+  </div>
+);}
+
+function SlaCard({openDrawer}){const s=window.appData.sla;const sl={breach:"Breach",degraded:"Degraded",warning:"Warning"};return(
+  <div className="card">
+    <div className="card-head"><div className="lbl"><div className="eyebrow">SLA · Service delivery</div><h3>Processes with deviations</h3></div><span className="head-action" onClick={()=>openDrawer("sla")}>All →</span></div>
+    <div className="sla-summary">
+      <div className="sla-pill" onClick={()=>openDrawer("sla:total")}><span className="v"><Num value={s.total} onClick={()=>openDrawer("sla:total")}/></span><span className="l"># Total</span></div>
+      <div className="sla-pill breach" onClick={()=>openDrawer("sla:breach")}><span className="v"><Num value={s.breakdown.breach} onClick={()=>openDrawer("sla:breach")}/></span><span className="l"># Breach</span></div>
+      <div className="sla-pill degraded" onClick={()=>openDrawer("sla:degraded")}><span className="v"><Num value={s.breakdown.degraded} onClick={()=>openDrawer("sla:degraded")}/></span><span className="l"># Degraded</span></div>
+      <div className="sla-pill warning" onClick={()=>openDrawer("sla:warning")}><span className="v"><Num value={s.breakdown.warning} onClick={()=>openDrawer("sla:warning")}/></span><span className="l"># Warning</span></div>
+    </div>
+    <div className="sla-table-head"><span></span><span>Workload</span><span>Asset</span><span>Target</span><span>Actual</span><span></span></div>
+    <div className="sla-list">{s.items.map(it=>(
+      <div key={it.id} className="sla-row" onClick={()=>openDrawer("slaitem:"+it.id)}>
+        <div className="sr-top">
+          <span className={`sev-dot ${it.severity==="breach"?"high":it.severity==="degraded"?"medium":"low"}`}/>
+          <div className="snw"><span className="sn">{it.name}</span><span className="sid">{it.id} · {sl[it.severity]}</span></div>
+        </div>
+        <div className="sr-bot">
+          <span className="sass">{it.asset}</span>
+          <span className="st">{it.target}</span>
+          <span className="sa">{it.actual}</span>
+        </div>
+        <span className="sr-chev">›</span>
+      </div>
+    ))}</div>
+  </div>
+);}
+
+/* DRAWERS */
+function DH({eyebrow,title,sub,onClose}){return(
+  <div className="drawer-head">
+    <div className="drow"><div style={{display:"flex",flexDirection:"column",gap:3}}><span className="eyebrow">{eyebrow}</span><h2>{title}</h2></div><button className="drawer-close" onClick={onClose}>esc · close</button></div>
+    {sub&&<div className="sub">{sub}</div>}
+  </div>
+);}
+
+function ComputeDrawer({onClose}){const tiers=window.appData.tiers,total=tiers.reduce((s,t)=>s+t.count,0);return(<>
+  <DH eyebrow="# Compute processes · today" title={window.fmt.int(total)+" processes"} sub="Placement across 5 tiers, 12 offshore assets, 4 onshore centres." onClose={onClose}/>
+  <div className="drawer-body">
+    <div className="drawer-section"><h4>Placement mix</h4>
+      <div className="bd-bar">{tiers.map(t=><span key={t.id} style={{width:`${t.share}%`,background:tc(t.id)}} title={t.name}/>)}</div>
+      <div className="bd-legend">{tiers.map(t=><div key={t.id} className="lg"><span className="sw" style={{background:tc(t.id)}}/><span className="n">{t.name}</span><span className="c">{window.fmt.int(t.count)}</span><span className="p">{t.share.toFixed(1)}%</span></div>)}</div>
+    </div>
+    <div className="drawer-section"><h4>Placement rationale</h4>
+      <div className="callout">AI Slice placed <strong>63%</strong> of workloads at customer or telco near edge today. The orchestrator down-shifted <strong>184 processes</strong> from public cloud to Nscale sovereign in the last 6 h to respect data-residency constraints.</div>
+    </div>
+    <div className="drawer-section"><h4>By asset · top 5</h4>
+      <div className="timeline">
+        {[{a:"Heidrun",n:2140,p:"Drone + drilling RT"},{a:"Johan Sverdrup",n:1812,p:"Digital twin sync"},{a:"Åsgard B",n:1488,p:"Valve / process opt."},{a:"Snøhvit",n:1207,p:"Flare analytics"},{a:"Troll A",n:1102,p:"ROV pilot assist"}].map(r=>(
+          <div key={r.a} className="tl-row"><span className="time">{window.fmt.int(r.n)}</span><div className="body"><strong>{r.a}</strong><div className="meta">{r.p}</div></div><span className="time">›</span></div>
+        ))}
+      </div>
+    </div>
+  </div>
+</>);}
+
+function CostDrawer({onClose}){return(<>
+  <DH eyebrow="# NOK cost savings · today" title="23.4% saved" sub="≈ NOK 4.2 M avoided vs. always-on cloud baseline." onClose={onClose}/>
+  <div className="drawer-body">
+    <div className="drawer-section"><h4>Where the savings came from</h4>
+      <div className="bd-legend">{[{n:"Edge placement (vs. cloud)",c:"NOK 2.18 M",p:"52%",color:"#00C8FF"},{n:"Idle workload suspension",c:"NOK 0.84 M",p:"20%",color:"#3FD6FF"},{n:"Slice consolidation",c:"NOK 0.51 M",p:"12%",color:"#1C16C5"},{n:"Sovereign cloud bursts",c:"NOK 0.44 M",p:"10%",color:"#070452"},{n:"Off-peak training",c:"NOK 0.25 M",p:"6%",color:"#6B69A8"}].map((r,i)=>(
+        <div key={i} className="lg"><span className="sw" style={{background:r.color}}/><span className="n">{r.n}</span><span className="c">{r.c}</span><span className="p">{r.p}</span></div>
+      ))}</div>
+    </div>
+    <div className="drawer-section"><h4>vs. 30-day baseline</h4>
+      <div className="dkv"><span className="k">Baseline (always-cloud)</span><span className="v">NOK 17.9 M / day</span></div>
+      <div className="dkv"><span className="k">AI Slice realised</span><span className="v">NOK 13.7 M / day</span></div>
+      <div className="dkv"><span className="k">Net saving</span><span className="v">NOK 4.2 M / day</span></div>
+      <div className="dkv"><span className="k">Projected QTD</span><span className="v">NOK 378 M</span></div>
+    </div>
+    <div className="callout">Biggest lever: relocating <strong>flare video analytics</strong> to customer-edge on Snøhvit saves <strong>NOK 184k / day</strong>.</div>
+  </div>
+</>);}
+
+function EmissionsDrawer({onClose}){const tiers=window.appData.tiers,totalCo2=tiers.reduce((s,t)=>s+t.co2,0);return(<>
+  <DH eyebrow="# Emissions savings · today" title="17.8% avoided" sub="≈ 38.4 t CO₂e avoided · equivalent to 12 transatlantic flights." onClose={onClose}/>
+  <div className="drawer-body">
+    <div className="drawer-section"><h4>Carbon by tier</h4>
+      <div className="bd-legend">{tiers.map(t=><div key={t.id} className="lg"><span className="sw" style={{background:tc(t.id)}}/><span className="n">{t.name}</span><span className="c">{window.fmt.co2(t.co2)}</span><span className="p">{(t.co2/totalCo2*100).toFixed(0)}%</span></div>)}</div>
+    </div>
+    <div className="drawer-section"><h4>Why it improved</h4>
+      <div className="callout">Norwegian grid intensity dipped to <strong>17 gCO₂/kWh</strong> overnight; AI Slice moved <strong>312 training jobs</strong> into the low-carbon window automatically.</div>
+    </div>
+    <div className="drawer-section"><h4>Scope 2 attribution</h4>
+      <div className="dkv"><span className="k">Edge (offshore turbines)</span><span className="v">4.2 t</span></div>
+      <div className="dkv"><span className="k">Telco near + far edge</span><span className="v">8.9 t</span></div>
+      <div className="dkv"><span className="k">Sovereign cloud (Nscale)</span><span className="v">2.4 t</span></div>
+      <div className="dkv"><span className="k">Public cloud</span><span className="v">3.6 t</span></div>
+    </div>
+  </div>
+</>);}
+
+function SlaDrawer({onClose,sub}){const s=window.appData.sla;const filter=(sub==="breach"||sub==="degraded"||sub==="warning")?sub:null;const items=filter?s.items.filter(i=>i.severity===filter):s.items;const tm={breach:"# SLA breaches",degraded:"# Degraded SLAs",warning:"# SLA warnings",total:"# SLA deviations","":"# SLA deviations"};return(<>
+  <DH eyebrow="Service delivery" title={tm[sub||""]+" · "+items.length} sub="Of 12,847 compute processes today, the following missed their target." onClose={onClose}/>
+  <div className="drawer-body">
+    <div className="drawer-section"><h4>Severity mix</h4>
+      <div className="bd-bar"><span style={{width:`${(s.breakdown.breach/s.total)*100}%`,background:"#FF4A6E"}}/><span style={{width:`${(s.breakdown.degraded/s.total)*100}%`,background:"#FFC83D"}}/><span style={{width:`${(s.breakdown.warning/s.total)*100}%`,background:"#00C8FF"}}/></div>
+      <div className="bd-legend">
+        <div className="lg"><span className="sw" style={{background:"#FF4A6E"}}/><span className="n">Breach</span><span className="c"></span><span className="p">{s.breakdown.breach}</span></div>
+        <div className="lg"><span className="sw" style={{background:"#FFC83D"}}/><span className="n">Degraded</span><span className="c"></span><span className="p">{s.breakdown.degraded}</span></div>
+        <div className="lg"><span className="sw" style={{background:"#00C8FF"}}/><span className="n">Warning</span><span className="c"></span><span className="p">{s.breakdown.warning}</span></div>
+      </div>
+    </div>
+    <div className="drawer-section"><h4>Workloads · {items.length}</h4>
+      <div className="timeline">{items.map(it=>(
+        <div key={it.id} className="tl-row"><span className="time">{it.id}</span><div className="body"><strong>{it.name}</strong><div className="meta">{it.asset} · {it.tier} · target {it.target}</div><div className="meta">Actual: {it.actual}</div></div><span className={`sev-dot ${it.severity==="breach"?"high":it.severity==="degraded"?"medium":"low"}`}/></div>
+      ))}</div>
+    </div>
+  </div>
+</>);}
+
+function SlaItemDrawer({onClose,id}){const it=window.appData.sla.items.find(x=>x.id===id);if(!it)return <DH title="Not found" onClose={onClose} eyebrow=""/>;return(<>
+  <DH eyebrow={"Workload "+it.id+" · "+it.severity} title={it.name} sub={it.asset+" · placed on "+it.tier+" tier"} onClose={onClose}/>
+  <div className="drawer-body">
+    <div className="drawer-section"><h4>Service profile</h4>
+      <div className="dkv"><span className="k">Target</span><span className="v">{it.target}</span></div>
+      <div className="dkv"><span className="k">Actual</span><span className="v">{it.actual}</span></div>
+      <div className="dkv"><span className="k">Severity</span><span className="v">{it.severity}</span></div>
+      <div className="dkv"><span className="k">Placement</span><span className="v">{it.tier}</span></div>
+    </div>
+    <div className="drawer-section"><h4>Root cause · inferred</h4>
+      <div className="callout">Backhaul jitter on the Stavanger–Bergen link exceeded <strong>4.2 ms</strong> p99 for 14 minutes around 13:20. AI Slice re-routed via Sandsli near-edge; latency recovered but the daily average had already drifted.</div>
+    </div>
+    <div className="drawer-section"><h4>Suggested actions</h4>
+      <div className="timeline">{[{n:"Pin to Sandsli near-edge",m:"Forecast p99 9 ms · cost +NOK 12k/day"},{n:"Promote to customer edge",m:"Forecast p99 5 ms · cost +NOK 38k/day"},{n:"Relax SLA to 12 ms",m:"Aligns with current operational risk"}].map((r,i)=>(
+        <div key={i} className="tl-row" style={i===0?{borderTop:"none"}:{}}><span className="time">{i+1}</span><div className="body"><strong>{r.n}</strong><div className="meta">{r.m}</div></div><span className="time">›</span></div>
+      ))}</div>
+    </div>
+  </div>
+</>);}
+
+function TierDrawer({onClose,id}){const t=window.appData.tiers.find(x=>x.id===id);if(!t)return <DH title="Not found" onClose={onClose} eyebrow=""/>;
+  const desc={edge:"Workloads running on compute physically present on the platform — sub-5 ms responses, survives connectivity loss with local autonomy.",near:"Telco-grade compute at the regional aggregation site — single-digit ms to coastal assets via 5G slicing.",far:"Telenor's national edge nodes — shared workloads across the operator fleet.",nscale:"Sovereign AI cloud on Nscale's Norwegian region — heavy training and simulation with data residency.",cloud:"Hyperscaler · for non-real-time, non-sensitive workloads where elasticity matters more than locality."};
+  return(<>
+  <DH eyebrow={"# "+t.name+" · today"} title={window.fmt.int(t.count)+" processes"} sub={t.where+" · latency "+t.latency} onClose={onClose}/>
+  <div className="drawer-body">
+    <div className="drawer-section"><h4>Tier profile</h4>
+      <div className="dkv"><span className="k">Share of workloads</span><span className="v">{t.share.toFixed(1)}%</span></div>
+      <div className="dkv"><span className="k">Cost / day</span><span className="v">{window.fmt.nok(t.cost)}</span></div>
+      <div className="dkv"><span className="k">CO₂e / day</span><span className="v">{window.fmt.co2(t.co2)}</span></div>
+      <div className="dkv"><span className="k">Latency</span><span className="v">{t.latency}</span></div>
+    </div>
+    <div className="drawer-section"><h4>Workloads running here</h4>
+      <div className="timeline">{t.examples.map((e,i)=><div key={i} className="tl-row"><span className="time">WL-{90200+i*7}</span><div className="body"><strong>{e}</strong><div className="meta">Placed by AI Slice · 04:12 CEST</div></div><span className="time">›</span></div>)}</div>
+    </div>
+    <div className="drawer-section"><h4>What "{t.name}" means</h4><div className="callout">{desc[t.id]}</div></div>
+  </div>
+</>);}
+
+function AutonomousDrawer({onClose,sub}){const a=window.appData.autonomous;let items=a.items,title="Autonomous operations";
+  if(sub==="running"){items=items.filter(i=>i.state==="running");title="# Running";}
+  if(sub==="queued"){items=items.filter(i=>i.state==="queued");title="# Queued";}
+  if(sub==="done"){title="# Completed today";}
+  return(<>
+  <DH eyebrow="Autonomous operations" title={title+" · "+(sub==="done"?a.completedToday:items.length)} sub="Long-running autonomous workflows orchestrated on AI Slice." onClose={onClose}/>
+  <div className="drawer-body">
+    <div className="drawer-section"><h4>Operations</h4>
+      <div className="ops-list">{items.map(it=>(
+        <div key={it.id} className="ops-item">
+          <div className="ops-top"><div className="ops-name"><Pill state={it.state}/><span>{it.name}</span></div><span className="ops-id">{it.id}</span></div>
+          <div className="ops-top" style={{marginBottom:0}}><span className="ops-asset">{it.asset} · {it.tier}</span><span className="ops-eta">{it.eta}</span></div>
+          <div className="ops-bar"><span style={{width:`${it.progress}%`}}/></div>
+        </div>
+      ))}</div>
+    </div>
+    {sub==="done"&&<div className="callout"><strong>{a.completedToday}</strong> autonomous operations completed today, freeing an estimated <strong>187 person-hours</strong> of onshore operator attention.</div>}
+  </div>
+</>);}
+
+function OpDrawer({onClose,id}){const it=window.appData.autonomous.items.find(x=>x.id===id);if(!it)return <DH title="Not found" onClose={onClose} eyebrow=""/>;return(<>
+  <DH eyebrow={it.id+" · "+it.state} title={it.name} sub={it.asset+" · "+it.tier+" tier · ETA "+it.eta} onClose={onClose}/>
+  <div className="drawer-body">
+    <div className="drawer-section"><h4>Progress</h4>
+      <div className="ops-bar" style={{marginBottom:8}}><span style={{width:`${it.progress}%`}}/></div>
+      <div className="dkv"><span className="k">Progress</span><span className="v">{it.progress}%</span></div>
+      <div className="dkv"><span className="k">ETA</span><span className="v">{it.eta}</span></div>
+      <div className="dkv"><span className="k">Started</span><span className="v">14:08 CEST</span></div>
+      <div className="dkv"><span className="k">Placed by</span><span className="v">AI Slice · v4.18.2</span></div>
+    </div>
+    <div className="drawer-section"><h4>Live telemetry</h4>
+      <div className="dkv"><span className="k">Inference p99</span><span className="v">7.2 ms</span></div>
+      <div className="dkv"><span className="k">Throughput</span><span className="v">412 frames / s</span></div>
+      <div className="dkv"><span className="k">Slice ID</span><span className="v">sl-NW-{it.id.slice(3)}-{it.tier}</span></div>
+      <div className="dkv"><span className="k">Backhaul</span><span className="v">5G SA · URLLC</span></div>
+    </div>
+    <div className="callout">If connectivity to {it.asset} drops, this operation continues locally at customer edge for up to <strong>96 hours</strong> and re-syncs on reconnect.</div>
+  </div>
+</>);}
+
+function CyberDrawer({onClose,sub}){const c=window.appData.cyber;let title="# Threats prevented",value=c.prevented;
+  if(sub==="critical"){title="# Critical threats";value=c.critical;}
+  if(sub==="isolated"){title="# Slices auto-isolated";value=c.isolated;}
+  if(sub.startsWith("vector:")){const name=sub.slice(7);const v=c.vectors.find(x=>x.name===name);title="# "+name;value=v?v.count:"—";}
+  if(sub.startsWith("hour:")){const hr=parseInt(sub.slice(5),10);title="# Events · "+String(hr).padStart(2,"0")+":00";value=c.hourly[hr];}
+  return(<>
+  <DH eyebrow="Security · AI Slice firewall" title={title+" · "+value} sub="All blocks happened before traffic reached customer infrastructure." onClose={onClose}/>
+  <div className="drawer-body">
+    <div className="drawer-section"><h4>Top vectors today</h4>
+      <div className="bd-legend">{c.vectors.map(v=><div key={v.name} className="lg"><span className="sw" style={{background:v.severity==="high"?"#FF4A6E":v.severity==="medium"?"#FFC83D":"#00C8FF"}}/><span className="n">{v.name}</span><span className="c"></span><span className="p">{v.count}</span></div>)}</div>
+    </div>
+    <div className="drawer-section"><h4>Most recent · 4 of {c.prevented}</h4>
+      <div className="timeline">{c.recent.map((r,i)=>(
+        <div key={i} className="tl-row"><span className="time">{r.time}</span><div className="body"><strong>{r.vector}</strong><div className="meta">{r.asset} · {r.action}</div></div><span className={`sev-dot ${r.severity==="high"?"high":r.severity==="medium"?"medium":"low"}`}/></div>
+      ))}</div>
+    </div>
+    <div className="callout">AI Slice slices are <strong>cryptographically isolated</strong> per workload — a compromise on one slice cannot lateral-move into others.</div>
+  </div>
+</>);}
+
+function DrawerContent({drawerKey,onClose}){const [base,...rest]=drawerKey.split(":");const sub=rest.join(":");
+  if(base==="compute")    return <ComputeDrawer onClose={onClose}/>;
+  if(base==="cost")       return <CostDrawer onClose={onClose}/>;
+  if(base==="emissions")  return <EmissionsDrawer onClose={onClose}/>;
+  if(base==="sla")        return <SlaDrawer onClose={onClose} sub={sub}/>;
+  if(base==="slaitem")    return <SlaItemDrawer onClose={onClose} id={sub}/>;
+  if(base==="tier")       return <TierDrawer onClose={onClose} id={sub}/>;
+  if(base==="autonomous") return <AutonomousDrawer onClose={onClose} sub={sub}/>;
+  if(base==="op")         return <OpDrawer onClose={onClose} id={sub}/>;
+  if(base==="cyber")      return <CyberDrawer onClose={onClose} sub={sub}/>;
+  return <DH eyebrow="Detail" title="Not implemented" sub={drawerKey} onClose={onClose}/>;
+}
+
+function Drawer({drawerKey,onClose}){const open=drawerKey!==null;
+  useEffect(()=>{const f=e=>{if(e.key==="Escape"&&open)onClose();};window.addEventListener("keydown",f);return()=>window.removeEventListener("keydown",f);},[open,onClose]);
+  useEffect(()=>{document.body.style.overflow=open?"hidden":"";return()=>{document.body.style.overflow="";};},[open]);
+  return(<><div className={`drawer-scrim ${open?"open":""}`} onClick={onClose}/><aside className={`drawer ${open?"open":""}`} role="dialog" aria-hidden={!open}>{open&&<DrawerContent drawerKey={drawerKey} onClose={onClose}/>}</aside></>);
+}
+
+function TweaksPanel({shell,onShell,kpiAccent,onAccent,showSpark,onSpark,denseTier,onDense}){
+  const [open,setOpen]=useState(false);
+  const A=[{key:"cyan",hex:"#00C8FF"},{key:"ice",hex:"#ADFFFE"},{key:"coral",hex:"#FF4A6E"},{key:"sun",hex:"#FFC83D"}];
+  return(<>
+    {!open&&<button className="twk-fab" onClick={()=>setOpen(true)}>⚙ Tweaks</button>}
+    {open&&<div className="twk-panel">
+      <div className="twk-hd"><b>Tweaks</b><button className="twk-x" onClick={()=>setOpen(false)}>✕</button></div>
+      <div className="twk-body">
+        <div className="twk-sect">Shell</div>
+        <div className="twk-row"><div className="twk-lbl"><span>Theme</span></div>
+          <div className="twk-seg"><div className="twk-seg-thumb" style={{left:shell==="light"?"2px":"calc(50% + 1px)",width:"calc(50% - 3px)"}}/>
+            {["light","dark"].map(v=><button key={v} onClick={()=>onShell(v)}>{v}</button>)}
+          </div>
+        </div>
+        <div className="twk-sect">Visuals</div>
+        <div className="twk-row"><div className="twk-lbl"><span>Accent</span></div>
+          <div className="twk-chips">{A.map(a=><button key={a.key} className="twk-chip" data-on={kpiAccent===a.key?"1":"0"} style={{background:a.hex}} onClick={()=>onAccent(a.key)}/>)}</div>
+        </div>
+        <div className="twk-row twk-row-h"><div className="twk-lbl"><span>KPI sparklines</span></div><button className="twk-toggle" data-on={showSpark?"1":"0"} onClick={()=>onSpark(!showSpark)}><i/></button></div>
+        <div className="twk-row twk-row-h"><div className="twk-lbl"><span>Dense tier table</span></div><button className="twk-toggle" data-on={denseTier?"1":"0"} onClick={()=>onDense(!denseTier)}><i/></button></div>
+      </div>
+    </div>}
+  </>);
+}
+
+function App(){
+  const [drawerKey,setDrawerKey]=useState(null);
+  const [period,setPeriod]=useState("Today");
+  const [shell,setShell]=useState("light");
+  const [kpiAccent,setKpiAccent]=useState("cyan");
+  const [showSpark,setShowSpark]=useState(true);
+  const [denseTier,setDenseTier]=useState(false);
+  const ACCENTS={cyan:"#00C8FF",ice:"#ADFFFE",coral:"#FF4A6E",sun:"#FFC83D"};
+  useEffect(()=>{document.body.classList.toggle("dark-shell",shell==="dark");},[shell]);
+  useEffect(()=>{document.documentElement.style.setProperty("--accent-live",ACCENTS[kpiAccent]||"#00C8FF");},[kpiAccent]);
+  useEffect(()=>{document.querySelectorAll(".kpi .sparkline").forEach(el=>{el.style.display=showSpark?"":"none";});},[showSpark]);
+  useEffect(()=>{document.querySelectorAll(".tier-row").forEach(el=>{el.style.padding=denseTier?"7px 8px":"";});},[denseTier]);
+  return(
+    <div className="app">
+      <TopBar/>
+      <PageHead period={period} setPeriod={setPeriod}/>
+      <div className="page-body">
+        <KpiStrip openDrawer={setDrawerKey}/>
+        <div className="grid-8-4"><ComputeBreakdown openDrawer={setDrawerKey}/><AutonomousOps openDrawer={setDrawerKey}/></div>
+        <div className="grid-2col"><CyberCard openDrawer={setDrawerKey}/><SlaCard openDrawer={setDrawerKey}/></div>
+      </div>
+      <div className="page-foot">
+        <span>Telenor's <span style={{color:"var(--tol-cyan-500)"}}>[AI]</span> Slice · Daily report engine v4.18 · last sync {window.appData.syncedAt}</span>
+        <div className="legal"><span>Sovereignty: Norway / EEA</span><span>·</span><span>SOC 2 Type II</span><span>·</span><span>ISO 27001</span></div>
+      </div>
+      <Drawer drawerKey={drawerKey} onClose={()=>setDrawerKey(null)}/>
+      <TweaksPanel shell={shell} onShell={setShell} kpiAccent={kpiAccent} onAccent={setKpiAccent} showSpark={showSpark} onSpark={setShowSpark} denseTier={denseTier} onDense={setDenseTier}/>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
